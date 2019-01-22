@@ -20,10 +20,12 @@ namespace SetAffinityWrapper
             if (args.Length <= 0)
             {
                 Console.WriteLine("Insufficient args");
+                Console.WriteLine("format: SetAffinityWrapper.exe (affinity-mask) (filename) [args]");
                 return;
             }
 
-            var filename = args[0];
+            var affinity = args[0];
+            var filename = args[1];
             var arguments = "";
 
             for (int i = 1; i < args.Length; ++i)
@@ -35,12 +37,15 @@ namespace SetAffinityWrapper
 
             Console.WriteLine(string.Format("SetAffinityWrapper: starting '{0}' with '{1}'...", filename, arguments));
 
+            var processAffinity = (IntPtr)System.Convert.ToUInt32(affinity, 16);
+
+            Console.WriteLine(string.Format("> using affinity {0}", processAffinity));
+
             var cache = new List<PROCESSENTRY32>();
 
             var processInfo = new ProcessStartInfo(filename, arguments);
             var process = Process.Start(processInfo);
             var processId = process.Id;
-            var processAffinity = (IntPtr)0x2;
 
             // need to check all childrens
             hosted = process;
