@@ -47,6 +47,8 @@ namespace SetAffinityWrapper
             var process = Process.Start(processInfo);
             var processId = process.Id;
 
+            process.ProcessorAffinity = processAffinity;
+
             // need to check all childrens
             hosted = process;
             childIds = new List<int>();
