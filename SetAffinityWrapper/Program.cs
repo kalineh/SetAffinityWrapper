@@ -28,7 +28,7 @@ namespace SetAffinityWrapper
             var filename = args[1];
             var arguments = "";
 
-            for (int i = 1; i < args.Length; ++i)
+            for (int i = 2; i < args.Length; ++i)
                 arguments += args[i] + ' ';
 
             // debug testing
