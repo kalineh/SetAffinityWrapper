@@ -62,7 +62,7 @@ namespace SetAffinityWrapper
                 CacheRebuild(cache);
                 CacheFindChildrenProcessIDs(cache, childIds, processId);
 
-                Console.WriteLine(string.Format("SetAffinityWrapper: > process scan took {0}ms", sw.ElapsedMilliseconds));
+                //Console.WriteLine(string.Format("SetAffinityWrapper: > process scan took {0}ms", sw.ElapsedMilliseconds));
 
                 foreach (var childId in childIds)
                 {
