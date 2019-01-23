@@ -11,6 +11,7 @@ namespace SetAffinityWrapper
     {
         private static Process hosted;
         private static List<int> childIds;
+        private static IntPtr processAffinity;
 
         static void Main(string[] args)
         {
@@ -37,7 +38,7 @@ namespace SetAffinityWrapper
 
             Console.WriteLine(string.Format("SetAffinityWrapper: starting '{0}' with '{1}'...", filename, arguments));
 
-            var processAffinity = (IntPtr)System.Convert.ToUInt32(affinity, 16);
+            processAffinity = (IntPtr)System.Convert.ToUInt32(affinity, 16);
 
             Console.WriteLine(string.Format("> using affinity {0}", processAffinity));
 
@@ -56,6 +57,29 @@ namespace SetAffinityWrapper
             while (!process.HasExited)
             {
                 Thread.Sleep(500);
+
+                try
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        var keyInfo = Console.ReadKey();
+                        var key = keyInfo.Key;
+
+                        if (key == ConsoleKey.D0) ChangeAffinityMask(0);
+                        if (key == ConsoleKey.D1) ChangeAffinityMask(1);
+                        if (key == ConsoleKey.D2) ChangeAffinityMask(2);
+                        if (key == ConsoleKey.D3) ChangeAffinityMask(3);
+                        if (key == ConsoleKey.D4) ChangeAffinityMask(4);
+                        if (key == ConsoleKey.D5) ChangeAffinityMask(5);
+                        if (key == ConsoleKey.D6) ChangeAffinityMask(6);
+                        if (key == ConsoleKey.D7) ChangeAffinityMask(7);
+                        if (key == ConsoleKey.D8) ChangeAffinityMask(8);
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
 
                 childIds.Clear();
 
@@ -264,6 +288,17 @@ namespace SetAffinityWrapper
             }
 
             Environment.Exit(0);
+        }
+
+        private static void ChangeAffinityMask(int cores)
+        {
+            var mask = 0;
+            for (int i = 0; i < cores; ++i)
+                mask = mask | (1 << i);
+
+            processAffinity = (IntPtr)mask;
+
+            Console.WriteLine(string.Format("SetAffinityWrapper: > changed affinity to {0} cores (mask: {1})", cores, mask));
         }
     }
 }
